@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Keuangan - Ilham</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .transaction-item {
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+        .transaction-item:hover {
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <!-- Login Section -->
+    <div id="loginSection" class="min-h-screen flex items-center justify-center gradient-bg p-4">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full fade-in">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lock text-white text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Catatan Keuangan</h1>
+                <p class="text-gray-600">Masukkan token untuk mengakses aplikasi</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Token Akses</label>
+                    <div class="relative">
+                        <input 
+                            type="password" 
+                            id="tokenInput"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                            placeholder="Masukkan token"
+                            required
+                        >
+                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-3 text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition duration-200 transform hover:-translate-y-0.5">
+                    <i class="fas fa-unlock-alt mr-2"></i>Masuk
+                </button>
+            </form>
+            
+            <div class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                <div class="flex items-start">
+                    <i class="fas fa-info-circle text-yellow-500 mt-1 mr-3"></i>
+                    <p class="text-sm text-yellow-700">Token akses: <code class="bg-yellow-100 px-2 py-1 rounded">ilham</code></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Section -->
+    <div id="mainApp" class="hidden min-h-screen bg-gray-50">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-wallet text-white"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold text-gray-800">Catatan Keuangan</h1>
+                    </div>
+                    <button onclick="logout()" class="flex items-center text-gray-600 hover:text-gray-800 transition duration-200">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Keluar
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Dashboard Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Saldo Total</p>
+                            <p id="totalBalance" class="text-2xl font-bold text-gray-800">Rp 0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-coins text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Pemasukan</p>
+                            <p id="totalIncome" class="text-2xl font-bold text-green-600">Rp 0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-arrow-down text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-600">Pengeluaran</p>
+                            <p id="totalExpense" class="text-2xl font-bold text-red-600">Rp 0</p>
+                        </div>
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-arrow-up text-red-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculator and Transaction Form -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Calculator -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-calculator mr-2 text-purple-600"></i>Kalkulator
+                    </h2>
+                    <div class="bg-gray-100 rounded-lg p-4 mb-4">
+                        <input type="text" id="calcDisplay" class="w-full bg-transparent text-right text-2xl font-bold outline-none" readonly value="0">
+                    </div>
+                    <div class="grid grid-cols-4 gap-2">
+                        <button onclick="clearCalc()" class="p-3 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition">C</button>
+                        <button onclick="appendToCalc('/')" class="p-3 bg-gray-200 rounded-lg font-semibold hover:bg-gray-300 transition">/</button>
+                        <button onclick="appendToCalc('*')" class="p-3 bg-gray-200 rounded-lg font-semibold hover:bg-gray-300 transition">×</button>
+                        <button onclick="appendToCalc('-')" class="p-3 bg-gray-200 rounded-lg font-semibold hover:bg-gray-300 transition">-</button>
+                        
+                        <button onclick="appendToCalc('7')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition">7</button>
+                        <button onclick="appendToCalc('8')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition">8</button>
+                        <button onclick="appendToCalc('9')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition">9</button>
+                        <button onclick="appendToCalc('+')" class="p-3 bg-gray-200 rounded-lg font-semibold hover:bg-gray-300 transition row-span-2">+</button>
+                        
+                        <button onclick="appendToCalc('4')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition">4</button>
+                        <button onclick="appendToCalc('5')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition">5</button>
+                        <button onclick="appendToCalc('6')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition">6</button>
+                        
+                        <button onclick="appendToCalc('1')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition">1</button>
+                        <button onclick="appendToCalc('2')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition">2</button>
+                        <button onclick="appendToCalc('3')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition">3</button>
+                        <button onclick="calculate()" class="p-3 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition row-span-2">=</button>
+                        
+                        <button onclick="appendToCalc('0')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition col-span-2">0</button>
+                        <button onclick="appendToCalc('.')" class="p-3 bg-white border rounded-lg font-semibold hover:bg-gray-50 transition">.</button>
+                    </div>
+                </div>
+
+                <!-- Transaction Form -->
+                <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                        <i class="fas fa-plus-circle mr-2 text-purple-600"></i>Tambah Transaksi
+                    </h2>
+                    <form id="transactionForm" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jenis Transaksi</label>
+                            <div class="flex space-x-4">
+                                <label class="flex items-center">
+                                    <input type="radio" name="type" value="income" checked class="mr-2 text-purple-600">
+                                    <span class="text-sm">Pemasukan</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="type" value="expense" class="mr-2 text-purple-600">
+                                    <span class="text-sm">Pengeluaran</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah</label>
+                            <input type="number" id="amount" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="0" required min="0" step="1000">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Kategori</label>
+                            <select id="category" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                <option value="gaji">Gaji</option>
+                                <option value="bonus">Bonus</option>
+                                <option value="investasi">Investasi</option>
+                                <option value="lainnya">Lainnya (Pemasukan)</option>
+                                <option value="makanan">Makanan</option>
+                                <option value="transportasi">Transportasi</option>
+                                <option value="belanja">Belanja</option>
+                                <option value="hiburan">Hiburan</option>
+                                <option value="tagihan">Tagihan</option>
+                                <option value="lainnya">Lainnya (Pengeluaran)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi</label>
+                            <textarea id="description" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Tambahkan deskripsi..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal</label>
+                            <input type="date" id="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 px-4 rounded-lg font-semibold hover:from-purple-600 hover:to-pink-600 transition duration-200">
+                            <i class="fas fa-save mr-2"></i>Simpan Transaksi
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Transaction List -->
+            <div class="bg-white rounded-xl shadow-md p-6 card-hover">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                        <i class="fas fa-history mr-2 text-purple-600"></i>Riwayat Transaksi
+                    </h2>
+                    <div class="flex space-x-2">
+                        <select id="filterCategory" class="px-3 py-1 border border-gray-300 rounded-lg text-sm">
+                            <option value="">Semua Kategori</option>
+                            <option value="gaji">Gaji</option>
+                            <option value="bonus">Bonus</option>
+                            <option value="investasi">Investasi</option>
+                            <option value="makanan">Makanan</option>
+                            <option value="transportasi">Transportasi</option>
+                            <option value="belanja">Belanja</option>
+                            <option value="hiburan">Hiburan</option>
+                            <option value="tagihan">Tagihan</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                        <select id="filterType" class="px-3 py-1 border border-gray-300 rounded-lg text-sm">
+                            <option value="">Semua Jenis</option>
+                            <option value="income">Pemasukan</option>
+                            <option value="expense">Pengeluaran</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="transactionList" class="space-y-3">
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-receipt text-4xl mb-3"></i>
+                        <p>Belum ada transaksi</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Login System
+        const CORRECT_TOKEN = 'ilham';
+        let isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+
+        function togglePassword() {
+            const input = document.getElementById('tokenInput');
+            const eyeIcon = input.nextElementSibling.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                eyeIcon.className = 'fas fa-eye';
+            }
+        }
+
+        function checkLogin() {
+            if (isLoggedIn) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                loadTransactions();
+                updateDashboard();
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            isLoggedIn = false;
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('mainApp').classList.add('hidden');
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const token = document.getElementById('tokenInput').value.trim();
+            
+            if (token === CORRECT_TOKEN) {
+                localStorage.setItem('isLoggedIn', 'true');
+                isLoggedIn = true;
+                checkLogin();
+            } else {
+                alert('Token salah! Silakan coba lagi.');
+            }
+        });
+
+        // Calculator System
+        let calcExpression = '0';
+
+        function appendToCalc(value) {
+            if (calcExpression === '0' && value !== '.') {
+                calcExpression = value;
+            } else {
+                calcExpression += value;
+            }
+            document.getElementById('calcDisplay').value = calcExpression;
+        }
+
+        function clearCalc() {
+            calcExpression = '0';
+            document.getElementById('calcDisplay').value = calcExpression;
+        }
+
+        function calculate() {
+            try {
+                const result = eval(calcExpression);
+                calcExpression = result.toString();
+                document.getElementById('calcDisplay').value = calcExpression;
+            } catch (error) {
+                alert('Error dalam perhitungan');
+                clearCalc();
+            }
+        }
+
+        // Transaction System
+        function getTransactions() {
+            return JSON.parse(localStorage.getItem('transactions')) || [];
+        }
+
+        function saveTransactions(transactions) {
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        function addTransaction(transaction) {
+            const transactions = getTransactions();
+            transactions.push({
+                id: Date.now(),
+                ...transaction,
+                createdAt: new Date().toISOString()
+            });
+            saveTransactions(transactions);
+            updateDashboard();
+            loadTransactions();
+        }
+
+        function updateDashboard() {
+            const transactions = getTransactions();
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            transactions.forEach(transaction => {
+                if (transaction.type === 'income') {
+                    totalIncome += parseFloat(transaction.amount);
+                } else {
+                    totalExpense += parseFloat(transaction.amount);
+                }
+            });
+
+            const totalBalance = totalIncome - totalExpense;
+
+            document.getElementById('totalBalance').textContent = formatCurrency(totalBalance);
+            document.getElementById('totalIncome').textContent = formatCurrency(totalIncome);
+            document.getElementById('totalExpense').textContent = formatCurrency(totalExpense);
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+
+        function loadTransactions() {
+            const transactions = getTransactions();
+            const transactionList = document.getElementById('transactionList');
+            const filterCategory = document.getElementById('filterCategory').value;
+            const filterType = document.getElementById('filterType').value;
+
+            let filteredTransactions = transactions;
+
+            if (filterCategory) {
+                filteredTransactions = filteredTransactions.filter(t => t.category === filterCategory);
+            }
+
+            if (filterType) {
+                filteredTransactions = filteredTransactions.filter(t => t.type === filterType);
+            }
+
+            // Sort by date descending
+            filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (filteredTransactions.length === 0) {
+                transactionList.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-receipt text-4xl mb-3"></i>
+                        <p>Tidak ada transaksi yang sesuai filter</p>
+                    </div>
+                `;
+                return;
+            }
+
+            transactionList.innerHTML = filteredTransactions.map(transaction => `
+                <div class="transaction-item p-4 bg-white rounded-lg border-l-4 ${
+                    transaction.type === 'income' ? 'border-green-500' : 'border-red-500'
+                } shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800">${transaction.description || 'Tidak ada deskripsi'}</h3>
+                            <p class="text-sm text-gray-600">${transaction.category} • ${formatDate(transaction.date)}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold ${transaction.type === 'income' ? 'text-green-600' : 'text-red-600'}">
+                                ${transaction.type === 'income' ? '+' : '-'} ${formatCurrency(transaction.amount)}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Event Listeners
+        document.getElementById('transactionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('amount').value);
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const category = document.getElementById('category').value;
+            const description = document.getElementById('description').value;
+            const date = document.getElementById('date').value;
+
+            if (amount <= 0) {
+                alert('Jumlah harus lebih dari 0');
+                return;
+            }
+
+            addTransaction({
+                amount,
+                type,
+                category,
+                description,
+                date
+            });
+
+            this.reset();
+            document.querySelector('input[name="type"][value="income"]').checked = true;
+            document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        });
+
+        document.getElementById('filterCategory').addEventListener('change', loadTransactions);
+        document.getElementById('filterType').addEventListener('change', loadTransactions);
+
+        // Initialize
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        checkLogin();
+    </script>
+</body>
+</html>
+
