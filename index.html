@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelas 8 SMP Azahra</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .student-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .modal {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .modal-hidden {
+            opacity: 0;
+            transform: scale(0.9);
+            pointer-events: none;
+        }
+        .modal-visible {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+    <!-- Login Section -->
+    <div id="loginSection" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+        <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+            <div class="text-center mb-8">
+                <div class="w-24 h-24 mx-auto mb-4 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+                    <i class="fas fa-graduation-cap text-white text-4xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">SMP Azahra</h1>
+                <p class="text-gray-600">Kelas 8 - Portal Siswa</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <input type="text" id="username" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Masukkan username">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition" placeholder="Masukkan password">
+                </div>
+                <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-3 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-indigo-800 transition transform hover:-translate-y-0.5 shadow-md">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Masuk
+                </button>
+            </form>
+            
+            <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                <p class="text-sm text-blue-800 text-center">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    Username: kelas8 | Password: azahra
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content (Hidden Initially) -->
+    <div id="mainContent" class="hidden">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fas fa-graduation-cap text-white"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold text-gray-800">Kelas 8 SMP Azahra</h1>
+                    </div>
+                    <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="bg-white border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex space-x-8">
+                    <button id="homeTab" class="py-4 px-1 border-b-2 border-blue-500 text-blue-600 font-medium">Home</button>
+                    <button id="studentsTab" class="py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium">Data Siswa</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Home Content -->
+        <div id="homeContent" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-8 text-white mb-8">
+                <h2 class="text-3xl font-bold mb-4">Selamat Datang di Kelas 8</h2>
+                <p class="text-lg opacity-90">SMP Azahra - Tahun Ajaran 2024/2025</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white rounded-2xl p-6 shadow-lg">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-user-tie text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Wali Kelas</h3>
+                            <p class="text-blue-600 font-semibold">Suhardi, S.Pd</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Pengalaman mengajar lebih dari 15 tahun dengan spesialisasi bidang Matematika dan IPA. Berkomitmen untuk menciptakan lingkungan belajar yang menyenangkan dan inspiratif.</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 shadow-lg">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center mr-4">
+                            <i class="fas fa-users text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">Profil Kelas</h3>
+                            <p class="text-green-600 font-semibold">32 Siswa | 8A</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600">Kelas 8A SMP Azahra dikenal sebagai kelas yang aktif, kreatif, dan memiliki semangat belajar yang tinggi. Terdiri dari 16 siswa laki-laki dan 16 siswa perempuan.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Informasi Kelas</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-calendar-alt text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Jadwal Pelajaran</h4>
+                            <p class="text-gray-600 text-sm">Senin-Jumat, 07:00 - 14:00 WIB</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-book text-green-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Mata Pelajaran</h4>
+                            <p class="text-gray-600 text-sm">Matematika, IPA, IPS, Bahasa Indonesia, Bahasa Inggris, PKn, Seni Budaya, PJOK, Prakarya</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-trophy text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Prestasi</h4>
+                            <p class="text-gray-600 text-sm">Juara 1 Lomba Sains Tingkat Kota, Juara 2 Olimpiade Matematika</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                            <i class="fas fa-heart text-orange-600"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">Kegiatan</h4>
+                            <p class="text-gray-600 text-sm">Study Tour, Pramuka, Ekstrakurikuler, Bakti Sosial</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Content -->
+        <div id="studentsContent" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 hidden">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">Data Siswa Kelas 8A</h2>
+                <p class="text-gray-600">Tahun Ajaran 2024/2025 - SMP Azahra</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Student Cards will be generated here -->
+            </div>
+        </div>
+
+        <!-- Student Detail Modal -->
+        <div id="studentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal modal-hidden">
+            <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-bold text-gray-800">Detail Siswa</h3>
+                        <button id="closeModal" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-2xl"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <div class="w-full h-64 bg-gray-200 rounded-lg overflow-hidden mb-4">
+                                <img id="modalImage" src="" alt="" class="w-full h-full object-cover" onerror="this.src='https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/66030003-f2cc-4e97-a0ca-5c2013ac8161.png'">
+                            </div>
+                        </div>
+                        <div>
+                            <h4 id="modalName" class="text-xl font-bold text-gray-800 mb-2"></h4>
+                            <p id="modalNis" class="text-gray-600 mb-4"></p>
+                            
+                            <div class="space-y-3">
+                                <div>
+                                    <span class="font-semibold text-gray-700">TTL:</span>
+                                    <span id="modalTtl" class="text-gray-600"></span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-700">Alamat:</span>
+                                    <span id="modalAddress" class="text-gray-600"></span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-700">No. HP:</span>
+                                    <span id="modalPhone" class="text-gray-600"></span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-700">Email:</span>
+                                    <span id="modalEmail" class="text-gray-600"></span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-700">Hobi:</span>
+                                    <span id="modalHobby" class="text-gray-600"></span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold text-gray-700">Cita-cita:</span>
+                                    <span id="modalDream" class="text-gray-600"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t">
+                        <h5 class="font-semibold text-gray-700 mb-3">Prestasi:</h5>
+                        <ul id="modalAchievements" class="list-disc list-inside text-gray-600 space-y-1"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Student Data
+        const students = [
+            {
+                id: 1,
+                name: "Ahmad Rizki",
+                nis: "202408001",
+                photo: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/e63d589b-3fcf-4d72-8733-77e1cac94de1.png",
+                shortDesc: "Siswa aktif dan berprestasi dalam bidang matematika",
+                ttl: "Jakarta, 15 Maret 2010",
+                address: "Jl. Merdeka No. 123, Jakarta Pusat",
+                phone: "0812-3456-7890",
+                email: "ahmad.rizki@email.com",
+                hobby: "Membaca, Bermain Catur, Programming",
+                dream: "Menjadi Software Engineer",
+                achievements: [
+                    "Juara 1 Olimpiade Matematika Tingkat Kota",
+                    "Juara 2 Lomba Sains Nasional",
+                    "Peserta Terbaik Kelas Semester Ganjil"
+                ]
+            },
+            {
+                id: 2,
+                name: "Siti Nurhaliza",
+                nis: "202408002",
+                photo: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/21a43e09-a8ba-4c72-aed1-f1bb200b436c.png",
+                shortDesc: "Siswa kreatif dengan bakat seni yang menonjol",
+                ttl: "Bandung, 20 April 2010",
+                address: "Jl. Asia Afrika No. 45, Bandung",
+                phone: "0813-9876-5432",
+                email: "siti.nurhaliza@email.com",
+                hobby: "Melukis, Menari, Menyanyi",
+                dream: "Menjadi Seniman Professional",
+                achievements: [
+                    "Juara 1 Lomba Melukis Tingkat Provinsi",
+                    "Juara 3 Festival Tari Tradisional",
+                    "Peserta Pentas Seni Nasional"
+                ]
+            },
+            {
+                id: 3,
+                name: "Budi Santoso",
+                nis: "202408003",
+                photo: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9b04509a-ff06-4ddd-bf8f-ffcae3b7c969.png",
+                shortDesc: "Atlet berprestasi di bidang olahraga basket",
+                ttl: "Surabaya, 10 Mei 2010",
+                address: "Jl. Diponegoro No. 78, Surabaya",
+                phone: "0821-1122-3344",
+                email: "budi.santoso@email.com",
+                hobby: "Basket, Renang, Lari",
+                dream: "Menjadi Atlet Professional",
+                achievements: [
+                    "Juara 1 Turnamen Basket Pelajar",
+                    "MVP Turnamen Basket Regional",
+                    "Peraih Medali Emas Renang"
+                ]
+            },
+            {
+                id: 4,
+                name: "Dewi Lestari",
+                nis: "202408004",
+                photo: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/63a28b7f-2940-4610-a7bd-58d04a0e93a0.png",
+                shortDesc: "Siswa dengan minat tinggi di bidang sains",
+                ttl: "Yogyakarta, 25 Juni 2010",
+                address: "Jl. Malioboro No. 56, Yogyakarta",
+                phone: "0857-6655-4433",
+                email: "dewi.lestari@email.com",
+                hobby: "Eksperimen Sains, Membaca, Menulis",
+                dream: "Menjadi Ilmuwan",
+                achievements: [
+                    "Juara 2 Olimpiade Sains Nasional",
+                    "Penemu Muda Terbaik 2023",
+                    "Penulis Artikel Sains Terbaik"
+                ]
+            },
+            {
+                id: 5,
+                name: "Rudi Hermawan",
+                nis: "202408005",
+                photo: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/1cc5c1cc-555b-4740-9429-6046c3e368c3.png",
+                shortDesc: "Siswa dengan bakat leadership yang kuat",
+                ttl: "Medan, 5 Juli 2010",
+                address: "Jl. Gatot Subroto No. 89, Medan",
+                phone: "0815-7788-9900",
+                email: "rudi.hermawan@email.com",
+                hobby: "Debat, Membaca Buku Leadership, Organisasi",
+                dream: "Menjadi Pemimpin Masa Depan",
+                achievements: [
+                    "Ketua OSIS Terpilih",
+                    "Juara 1 Lomba Debat Nasional",
+                    "Pemimpin Terbaik Kegiatan Pramuka"
+                ]
+            },
+            {
+                id: 6,
+                name: "Maya Sari",
+                nis: "202408006",
+                photo: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/9edee04c-f188-4983-97c6-0735e4a545be.png",
+                shortDesc: "Siswa multitalenta di bidang musik dan akademik",
+                ttl: "Semarang, 15 Agustus 2010",
+                address: "Jl. Pemuda No. 34, Semarang",
+                phone: "0823-4455-6677",
+                email: "maya.sari@email.com",
+                hobby: "Bermain Piano, Menyanyi, Membaca",
+                dream: "Menjadi Musisi Professional",
+                achievements: [
+                    "Juara 1 Festival Musik Pelajar",
+                    "Pemain Piano Terbaik Regional",
+                    "Peraih Nilai Tertinggi Kelas"
+                ]
+            },
+            {
+                id: 7,
+                name: "Joko Widodo",
+                nis: "202408007",
+                photo: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/d716a96b-b518-4056-817b-2cdde60e781a.png",
+                shortDesc: "Siswa dengan minat teknologi dan programming",
+                ttl: "Solo, 20 September 2010",
+                address: "Jl. Slamet Riyadi No. 12, Solo",
+                phone: "0811-2233-4455",
+                email: "joko.widodo@email.com",
+                hobby: "Programming, Robotika, Game Development",
+                dream: "Menjadi Software Developer",
+                achievements: [
+                    "Juara 1 Lomba Programming Junior",
+                    "Pengembang Aplikasi Edukasi",
+                    "Peserta Kompetisi Robotika Nasional"
+                ]
+            },
+            {
+                id: 8,
+                name: "Nina Setyawati",
+                nis: "202408008",
+                photo: "https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/2867f21d-5dbe-481d-8677-d2e5ebc9660e.png",
+                shortDesc: "Siswa berprestasi di bidang bahasa asing",
+                ttl: "Malang, 10 Oktober 2010",
+                address: "Jl. Ijen No. 67, Malang",
+                phone: "0856-9988-7766",
+                email: "nina.setyawati@email.com",
+                hobby: "Belajar Bahasa, Membaca Novel, Traveling",
+                dream: "Menjadi Penerjemah Professional",
+                achievements: [
+                    "Juara 1 Story Telling Competition",
+                    "Penerjemah Muda Terbaik",
+                    "Peserta Pertukaran Pelajar Internasional"
+                ]
+            }
+        ];
+
+        // DOM Elements
+        const loginSection = document.getElementById('loginSection');
+        const mainContent = document.getElementById('mainContent');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const homeTab = document.getElementById('homeTab');
+        const studentsTab = document.getElementById('studentsTab');
+        const homeContent = document.getElementById('homeContent');
+        const studentsContent = document.getElementById('studentsContent');
+        const studentModal = document.getElementById('studentModal');
+        const closeModal = document.getElementById('closeModal');
+
+        // Login Functionality
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'kelas8' && password === 'azahra') {
+                loginSection.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                showHomeContent();
+            } else {
+                alert('Username atau password salah! Silakan coba lagi.\n\nUsername: kelas8\nPassword: azahra');
+            }
+        });
+
+        // Logout Functionality
+        logoutBtn.addEventListener('click', function() {
+            if (confirm('Apakah Anda yakin ingin logout?')) {
+                mainContent.classList.add('hidden');
+                loginSection.classList.remove('hidden');
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            }
+        });
+
+        // Navigation Tabs
+        homeTab.addEventListener('click', showHomeContent);
+        studentsTab.addEventListener('click', showStudentsContent);
+
+        function showHomeContent() {
+            homeContent.classList.remove('hidden');
+            studentsContent.classList.add('hidden');
+            homeTab.classList.add('border-blue-500', 'text-blue-600');
+            homeTab.classList.remove('border-transparent', 'text-gray-500');
+            studentsTab.classList.remove('border-blue-500', 'text-blue-600');
+            studentsTab.classList.add('border-transparent', 'text-gray-500');
+        }
+
+        function showStudentsContent() {
+            homeContent.classList.add('hidden');
+            studentsContent.classList.remove('hidden');
+            studentsTab.classList.add('border-blue-500', 'text-blue-600');
+            studentsTab.classList.remove('border-transparent', 'text-gray-500');
+            homeTab.classList.remove('border-blue-500', 'text-blue-600');
+            homeTab.classList.add('border-transparent', 'text-gray-500');
+            
+            renderStudents();
+        }
+
+        // Render Students
+        function renderStudents() {
+            const container = studentsContent.querySelector('.grid');
+            container.innerHTML = '';
+
+            students.forEach(student => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-xl shadow-md overflow-hidden student-card';
+                card.innerHTML = `
+                    <div class="h-48 bg-gray-200 overflow-hidden">
+                        <img src="${student.photo}" alt="Foto siswa ${student.name}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x600/3b82f6/white?text=Foto+Siswa'">
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-2">${student.name}</h3>
+                        <p class="text-gray-600 text-sm mb-4">${student.shortDesc}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">NIS: ${student.nis}</span>
+                            <button onclick="showStudentDetail(${student.id})" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                                <i class="fas fa-info-circle mr-1"></i>Info Lengkap
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Show Student Detail
+        window.showStudentDetail = function(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (!student) return;
+
+            // Fill modal with student data
+            document.getElementById('modalImage').src = student.photo;
+            document.getElementById('modalImage').alt = `Foto siswa ${student.name}`;
+            document.getElementById('modalName').textContent = student.name;
+            document.getElementById('modalNis').textContent = `NIS: ${student.nis}`;
+            document.getElementById('modalTtl').textContent = student.ttl;
+            document.getElementById('modalAddress').textContent = student.address;
+            document.getElementById('modalPhone').textContent = student.phone;
+            document.getElementById('modalEmail').textContent = student.email;
+            document.getElementById('modalHobby').textContent = student.hobby;
+            document.getElementById('modalDream').textContent = student.dream;
+
+            // Render achievements
+            const achievementsList = document.getElementById('modalAchievements');
+            achievementsList.innerHTML = '';
+            student.achievements.forEach(achievement => {
+                const li = document.createElement('li');
+                li.textContent = achievement;
+                achievementsList.appendChild(li);
+            });
+
+            // Show modal
+            studentModal.classList.remove('modal-hidden');
+            studentModal.classList.add('modal-visible');
+        };
+
+        // Close Modal
+        closeModal.addEventListener('click', function() {
+            studentModal.classList.remove('modal-visible');
+            studentModal.classList.add('modal-hidden');
+        });
+
+        // Close modal when clicking outside
+        studentModal.addEventListener('click', function(e) {
+            if (e.target === studentModal) {
+                studentModal.classList.remove('modal-visible');
+                studentModal.classList.add('modal-hidden');
+            }
+        });
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && studentModal.classList.contains('modal-visible')) {
+                studentModal.classList.remove('modal-visible');
+                studentModal.classList.add('modal-hidden');
+            }
+        });
+    </script>
+</body>
+</html>
+
